@@ -51,7 +51,18 @@ namespace Services
 
         public List<CountryForReturnDto> GetAllCountries()
         {
-            throw new NotImplementedException();
+            return _countries.Select(c=>c.ToCountryForReturn()).ToList();
+        }
+
+        public CountryForReturnDto? GetCountryById(Guid? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+            Country? country= _countries.FirstOrDefault(c => c.Id==id);
+            if (country == null) { return null; }
+            return country.ToCountryForReturn();
         }
     }
 }

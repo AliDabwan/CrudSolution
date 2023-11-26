@@ -12,5 +12,6 @@ namespace ServiceContracts.Interfaces
         CountryForReturnDto AddCountry(CountryForCreateDto? country);
 
         List<CountryForReturnDto> GetAllCountries();
+        CountryForReturnDto? GetCountryById(Guid? id);
     }
 }

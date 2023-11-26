@@ -75,8 +75,14 @@ namespace CrudTest
             //Act
             CountryForReturnDto countryForReturnDTO = _countriesService.AddCountry(countryForCreateDTO);
 
+            List<CountryForReturnDto> actual_CountryForReturnDTO_List =
+             _countriesService.GetAllCountries();
             //Assert
             Assert.True(countryForReturnDTO.Id != Guid.Empty);
+
+            Assert.Contains(countryForReturnDTO, actual_CountryForReturnDTO_List);
+            //actual_CountryForReturnDTO_List
+            //    .ForEach(ac => Assert.Equivalent(ac, countryForReturnDTO));
         }
 
         #endregion
@@ -115,5 +121,36 @@ namespace CrudTest
         #endregion
 
 
+        #region GetCountryById
+        [Fact]
+        //If we supply null as Country Id, it should return null as CountryForReturnDTO
+        public void GetCountryByID_NullId()
+        {
+            //Arrange
+            Guid? Id = null;
+
+            //Act
+            CountryForReturnDto? countryForReturnDTO = _countriesService.GetCountryById(Id);
+
+            //Assert
+            Assert.Null(countryForReturnDTO);
+        }
+
+
+        [Fact]
+        //If we supply a valid country id, it should return the matching country details as CountryForReturnDTO object
+        public void GetCountryByID_ValidId()
+        {
+            //Arrange
+            CountryForCreateDto? countryForCreateDTO = new() { Name = "Libya" };
+            CountryForReturnDto countryForReturnDTO_From_Add = _countriesService.AddCountry(countryForCreateDTO);
+
+            //Act
+            CountryForReturnDto? countryForReturnDTO_From_Get = _countriesService.GetCountryById(countryForReturnDTO_From_Add.Id);
+
+            //Assert
+            Assert.Equal(countryForReturnDTO_From_Add, countryForReturnDTO_From_Get);
+        }
+        #endregion
     }
 }

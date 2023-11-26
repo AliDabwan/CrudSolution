@@ -12,7 +12,27 @@ namespace ServiceContracts.DTOS
         public Guid Id { get; set; }
         public string? Name { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
 
+            if (obj.GetType() != typeof(CountryForReturnDto))
+            {
+                return false;
+            }
+
+            CountryForReturnDto country_to_compare = (CountryForReturnDto)obj;
+
+            return Id == country_to_compare.Id && Name == country_to_compare.Name;
+        }
+
+        public override int GetHashCode()
+        {
+           return Id.GetHashCode();
+        }
     }
 
     public static class CountryExtensions

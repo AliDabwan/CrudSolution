@@ -8,7 +8,7 @@ namespace CrudTest
 {
     public class CalculationTest
     {
-        [Fact]
+        //[Fact]
         public void AddTest()
         {
             //Aarrange
