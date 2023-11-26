@@ -48,5 +48,10 @@ namespace Services
             _countries.Add(country);
             return country.ToCountryForReturn();
         }
+
+        public List<CountryForReturnDto> GetAllCountries()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

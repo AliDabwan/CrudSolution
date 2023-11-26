@@ -10,5 +10,7 @@ namespace ServiceContracts.Interfaces
     public interface ICountriesService
     {
         CountryForReturnDto AddCountry(CountryForCreateDto? country);
+
+        List<CountryForReturnDto> GetAllCountries();
     }
 }

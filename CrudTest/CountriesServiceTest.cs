@@ -80,5 +80,40 @@ namespace CrudTest
         }
 
         #endregion
+
+        #region GetAllCountries
+
+        [Fact]
+        //The list of countries should be empty by default (before adding any countries)
+        public void GetAllCountries_EmptyList()
+        {
+            //Act
+            List<CountryForReturnDto> actualCountryForReturnList = _countriesService.GetAllCountries();
+
+            //Assert
+            Assert.Empty(actualCountryForReturnList);
+        }
+
+        [Fact]
+        public void GetAllCountries_AddFewCountries()
+        {
+            //Arrange
+            List<CountryForCreateDto> countryForCreateList = new() {
+                    new(){ Name = "Iraq" },
+                    new(){ Name = "Syria" }};
+            //Act  expected CountryForReturnDTO List
+            List<CountryForReturnDto> expected_countryForReturnDTO_List = new();
+
+            countryForCreateList.ForEach(cf => expected_countryForReturnDTO_List.Add(_countriesService.AddCountry(cf)));
+
+            List<CountryForReturnDto> actual_CountryForReturnDTO_List = 
+                _countriesService.GetAllCountries();
+
+            //Check that actual_CountryForReturnDTO_List contains All expected_countryForReturn_List items 
+            expected_countryForReturnDTO_List.ForEach(ec => Assert.Contains(ec, actual_CountryForReturnDTO_List));
+        }
+        #endregion
+
+
     }
 }
