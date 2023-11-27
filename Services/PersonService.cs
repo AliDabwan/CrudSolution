@@ -3,6 +3,7 @@ using ServiceContracts.DTOS;
 using ServiceContracts.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +29,13 @@ namespace Services
             }
 
             //Validate PersonName
-            if (string.IsNullOrEmpty(personForCreateDTO.Name))
-            {
-                throw new ArgumentException("Person Name can't be blank");
-            }
+            //if (string.IsNullOrEmpty(personForCreateDTO.Name))
+            //{
+            //    throw new ArgumentException("Person Name can't be blank");
+            //}
+
+            ValidationContext validationContext=new ValidationContext(personForCreateDTO);
+
 
             //convert personForCreateDTO into Person type
             Person person = personForCreateDTO.ToPerson();
