@@ -5,11 +5,13 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrudTest", "CrudTest\CrudTest.csproj", "{B7E439C2-5A1A-43A5-BA9D-FE39A04F8F87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{F2D37D8D-3F6C-454F-8E2A-BB11477800DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{F2D37D8D-3F6C-454F-8E2A-BB11477800DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceContracts", "ServiceContracts\ServiceContracts.csproj", "{78961A07-B0A3-4815-8CDA-A0A58CD97016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceContracts", "ServiceContracts\ServiceContracts.csproj", "{78961A07-B0A3-4815-8CDA-A0A58CD97016}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{DB355A7F-5495-47F3-938C-EAA9D5D02FC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{DB355A7F-5495-47F3-938C-EAA9D5D02FC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRUDUI", "CRUDUI\CRUDUI.csproj", "{CD17C226-E7F8-4C95-8C11-1203019115F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DB355A7F-5495-47F3-938C-EAA9D5D02FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB355A7F-5495-47F3-938C-EAA9D5D02FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB355A7F-5495-47F3-938C-EAA9D5D02FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD17C226-E7F8-4C95-8C11-1203019115F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD17C226-E7F8-4C95-8C11-1203019115F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD17C226-E7F8-4C95-8C11-1203019115F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD17C226-E7F8-4C95-8C11-1203019115F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
