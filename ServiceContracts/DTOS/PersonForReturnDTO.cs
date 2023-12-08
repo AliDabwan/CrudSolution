@@ -27,6 +27,12 @@ namespace ServiceContracts.DTOS
         {
             return Id.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return $"Id : {Id}, Name : {Name} , Email : {Email} ";
+
+        }
     }
     public static class PersonExtensions
     {

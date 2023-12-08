@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContracts.DTOS;
 using ServiceContracts.Interfaces;
+using Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,8 +35,10 @@ namespace Services
             //    throw new ArgumentException("Person Name can't be blank");
             //}
 
-            ValidationContext validationContext=new ValidationContext(personForCreateDTO);
+           
+            // helper method for validation
 
+            Helper.ValidateModel(personForCreateDTO);
 
             //convert personForCreateDTO into Person type
             Person person = personForCreateDTO.ToPerson();
@@ -54,12 +57,19 @@ namespace Services
 
         public List<PersonForReturnDTO> GetAllPersons()
         {
-            throw new NotImplementedException();
+            return _persons.Select(c => c.ToPersonForReturn()).ToList();
+
         }
 
         public PersonForReturnDTO? GetPersonById(Guid? id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+            Person? person = _persons.FirstOrDefault(c => c.Id == id);
+            if (person == null) { return null; }
+            return person.ToPersonForReturn();
         }
     }
 }
