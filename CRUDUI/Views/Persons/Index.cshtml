@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Persons";
+}
+<div class="container p-2 ">
+
+    <div class="row pb-2">
+        <div class="col">
+            <h2 class="text-Dark ">Persons List</h2>
+        </div>
+        <div class="col text-end pt-2">
+            <a class="btn btn-outline-success"><i class="bi bi-plus-square-fill"></i> Add New Person</a>
+        </div>
+    </div>
+
+    <form class="row pb-2">
+        <div class="col dropdown">
+            <select class="form-select" title="Search By">
+                <option>option1</option>
+            </select>
+        </div>
+        <div class="col shadow-none">
+            <input class="form-control" placeholder="Enter search text">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+
+    <table class="table table-hover w-100">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Date of Birth</th>
+                <th class="text-center">Age</th>
+                <th class="text-center">Gender</th>
+                <th class="text-center">Country</th>
+                <th class="text-center">Receive Emails</th>
+                <th class="text-center">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ali</td>
+                <td class="text-center">mo@email.com</td>
+                <td class="text-center">01 jan 1981</td>
+                <td class="text-center">42</td>
+                <td class="text-center">Male</td>
+                <td class="text-center">Yemen</td>
+                <td class="text-center">True</td>
+                <td class="d-flex ">
+                    <a class="btn btn-warning mx-5">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a class="btn btn-danger">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
