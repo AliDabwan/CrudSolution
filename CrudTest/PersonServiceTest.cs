@@ -19,8 +19,8 @@ namespace CrudTest
 
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _personsService=new PersonService();
-            _countriesService=new CountriesService();
+            _personsService=new PersonService(false);
+            _countriesService=new CountriesService(false);
             _testOutputHelper = testOutputHelper;
         }
         #region AddPerson

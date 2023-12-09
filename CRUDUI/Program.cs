@@ -1,8 +1,12 @@
+using ServiceContracts.Interfaces;
+using Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSingleton<ICountriesService, CountriesService>();
+builder.Services.AddSingleton<IPersonService, PersonService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
