@@ -1,4 +1,5 @@
 ﻿using Entities;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTOS
 {
@@ -33,6 +34,17 @@ namespace ServiceContracts.DTOS
             return $"Id : {Id}, Name : {Name} , Email : {Email} ";
 
         }
+        public PersonForUpdateDto ToPersonForUpdateDTO()
+        {
+            return new PersonForUpdateDto() { Id = Id,
+                Name = Name, 
+                Email = Email,
+                DateOfBirth = DateOfBirth, 
+                Gender = (GenderOptions)Enum.Parse(typeof(GenderOptions),
+                Gender!, true), 
+                CountryId = CountryId, ReceiveEmails = ReceiveEmails };
+        }
+
     }
     public static class PersonExtensions
     {

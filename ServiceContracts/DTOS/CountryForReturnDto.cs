@@ -1,7 +1,9 @@
 ﻿using Entities;
+using ServiceContracts.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +35,8 @@ namespace ServiceContracts.DTOS
         {
            return Id.GetHashCode();
         }
+       
+
     }
 
     public static class CountryExtensions
