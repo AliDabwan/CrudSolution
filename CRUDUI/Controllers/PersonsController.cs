@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceContracts.DTOS;
+using ServiceContracts.Enums;
 using ServiceContracts.Interfaces;
 
 namespace CRUDUI.Controllers
@@ -9,7 +10,7 @@ namespace CRUDUI.Controllers
         private readonly ICountriesService _countriesService;
         private readonly IPersonService _personService;
 
-        public PersonsController(ICountriesService countriesService,IPersonService personService)
+        public PersonsController(ICountriesService countriesService, IPersonService personService)
         {
             _countriesService = countriesService;
             _personService = personService;
@@ -19,7 +20,7 @@ namespace CRUDUI.Controllers
         [Route("persons")]
         [Route("persons/index")]
 
-        public IActionResult Index(string searchBy,string? searchString)
+        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonForReturnDTO.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
@@ -29,11 +30,21 @@ namespace CRUDUI.Controllers
                 {nameof(PersonForReturnDTO.Gender),"Gender" },
 
             };
-           List<PersonForReturnDTO> persons=_personService.GetAllPersons();
+            //search
+            List<PersonForReturnDTO> persons = _personService.GetFilteredPersons(searchBy, searchString);
 
             ViewBag.CurrentSearchBy = searchBy;
             ViewBag.CurrentSearchString = searchString;
-            return View(persons);
+
+
+            //sort
+
+            List<PersonForReturnDTO> sortedPersons = _personService.GetSortedPersons(persons, sortBy, sortOrder);
+
+            ViewBag.CurrentSortBy = sortBy;
+            ViewBag.CurrentSortOrder = sortOrder.ToString();
+
+            return View(sortedPersons);
         }
     }
 }
