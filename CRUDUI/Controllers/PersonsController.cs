@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts.DTOS;
 using ServiceContracts.Enums;
 using ServiceContracts.Interfaces;
@@ -46,5 +47,39 @@ namespace CRUDUI.Controllers
 
             return View(sortedPersons);
         }
+        [Route("/persons/create")]
+        [HttpGet]
+        public IActionResult Create() {
+            List<CountryForReturnDto>countries = _countriesService.GetAllCountries();
+            //ViewBag.Countries = countries;
+            ViewBag.Countries = countries.Select(c=>new SelectListItem
+            {
+                Text= c.Name,
+                Value=c.Id.ToString()
+
+            });
+
+
+            return View(); }
+
+        [Route("/persons/create")]
+        [HttpPost]
+        public IActionResult Create(PersonForCreateDTO person)
+        {
+            if(!ModelState.IsValid)
+            {
+                List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries;
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(v => v.ErrorMessage).ToList() ;
+                return View();
+
+            }
+            _personService.AddPerson(person);
+            return RedirectToAction("Index","Persons");
+        }
+
     }
+
+
 }
