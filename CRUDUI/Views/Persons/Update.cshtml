@@ -1,27 +1,28 @@
-﻿@model PersonForReturnDTO
+﻿@model PersonForUpdateDto
 @{
-    ViewBag.Title = "Add Person";
+    ViewBag.Title = "Update Person";
 }
 <div class="container">
     <div class="row">
         <div class="col">
-            <h2 class="text-Dark ">Add new person</h2>
+            <h2 class="text-Dark ">Update person</h2>
         </div>
         <div class="col text-end mt-2">
-            <a href="~/persons/index" class="btn btn-outline-primary"><i class="bi bi-arrow-left-square-fill"></i> Back to persons list</a>
+            <a href="~/persons/index" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left-square-fill"></i> Back to persons list</a>
         </div>
     </div>
     @* <form action="~/persons/create" method="post"> *@
-    <form asp-controller="Persons" asp-action="Create" method="post">
+    <form asp-controller="Persons" asp-action="Update" method="post">
         <div class="form-group p-1 mx-3 mt-0">
-            <label asp-for="Name" class="form-label">Name:</label>
+            <label asp-for="Name"  class="form-label">Name:</label>
             <input type="text" class="form-control" asp-for="Name" placeholder="Enter name">
-            <span class="text-danger" asp-validation-for="Name" />
+        <span class="text-danger" asp-validation-for="Name"/>
 
         </div>
         <div class="form-group p-1 mx-3">
             <label asp-for="Email" class="form-label">Email:</label>
-            <input asp-for="Email" class="form-control" id="email" name="Email" placeholder="Enter email">
+            <input asp-for ="Email" class="form-control" id="email" name="Email" placeholder="Enter email">
             <span class="text-danger" asp-validation-for="Email" />
 
         </div>
@@ -34,7 +35,7 @@
         <div class="form-group p-1 mx-3">
             <label class="form-label">Gender:</label>
             <div class="form-check ">
-                <input class="form-check-input" type="radio" name="Gender" id="male" value="male">
+                <input class="form-check-input" checked type="radio" name="Gender" id="male" value="male">
                 <label class="form-check-label" for="male">
                     Male
                 </label>
@@ -56,12 +57,14 @@
 
                 } *@
             </select>
+            <span class="text-danger" asp-validation-for="CountryId" />
+
             <div class="form-group p-1 mt-2">
                 <label for="ReceiveEmails" class="form-check-label">Receive Emails:</label>
                 <input type="checkbox" class="form-check-input ms-2" id="ReceiveEmails" name="ReceiveEmails" value="true">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary ms-3 mt-2">Create</button>
+        <button type="submit" class="btn btn-primary ms-3 mt-2">Update</button>
         <div class="text-danger" asp-validation-summary="All">
 
         </div>

@@ -26,7 +26,7 @@ namespace CRUDUI.Controllers
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
                 {nameof(PersonForReturnDTO.Name),"Person Name" },
-                {nameof(PersonForReturnDTO.Email),"Person Name" },
+                {nameof(PersonForReturnDTO.Email),"Email" },
                 {nameof(PersonForReturnDTO.DateOfBirth),"Date of Birth" },
                 {nameof(PersonForReturnDTO.Gender),"Gender" },
 
@@ -69,7 +69,12 @@ namespace CRUDUI.Controllers
             if(!ModelState.IsValid)
             {
                 List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
-                ViewBag.Countries = countries;
+                ViewBag.Countries = countries.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+
+                });
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(v => v.ErrorMessage).ToList() ;
                 return View();
@@ -77,6 +82,92 @@ namespace CRUDUI.Controllers
             }
             _personService.AddPerson(person);
             return RedirectToAction("Index","Persons");
+        }
+
+        [Route("/persons/update/{id}")]
+        [HttpGet]
+        public IActionResult Update(Guid id)
+        {
+            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(id);
+
+            if(personForReturnDTO == null)
+            {
+                return RedirectToAction("index");
+            }
+
+            PersonForUpdateDto personForUpdateDto=personForReturnDTO.ToPersonForUpdateDTO();
+            List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+            //ViewBag.Countries = countries;
+            ViewBag.Countries = countries.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+
+            });
+
+
+            return View(personForUpdateDto);
+        }
+
+        [Route("/persons/update/{id}")]
+        [HttpPost]
+        public IActionResult Update(PersonForUpdateDto personForUpdateDto)
+        {
+            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(personForUpdateDto.Id);
+
+            if (personForReturnDTO == null)
+            {
+                return RedirectToAction("index");
+            }
+            if (!ModelState.IsValid)
+            {
+                List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+
+                });
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(v => v.ErrorMessage).ToList();
+                return View();
+
+            }
+            _personService.UpdatePerson(personForUpdateDto);
+            return RedirectToAction("Index", "Persons");
+        }
+
+
+
+        [Route("/persons/delete/{id}")]
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(id);
+
+            if (personForReturnDTO == null)
+            {
+                return RedirectToAction("index");
+            }
+
+           
+
+            return View(personForReturnDTO);
+        }
+
+        [Route("/persons/delete/{id}")]
+        [HttpPost]
+        public IActionResult Delete(PersonForReturnDTO personForReturnDTO)
+        {
+            PersonForReturnDTO? personFordelete = _personService.GetPersonById(personForReturnDTO.Id);
+
+            if (personFordelete == null)
+            {
+                return RedirectToAction("index");
+            }
+           
+            _personService.DeletePerson(personFordelete.Id);
+            return RedirectToAction("Index", "Persons");
         }
 
     }

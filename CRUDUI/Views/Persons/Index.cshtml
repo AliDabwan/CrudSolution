@@ -83,10 +83,12 @@
                     <td class="text-center">@person.Country</td>
                     <td class="text-center">@person.ReceiveEmails</td>
                     <td class="d-flex text-center ">
-                        <a class="btn btn-warning mx-5">
+                        <a asp-controller="Persons" asp-action="Update" 
+                        asp-route-id="@person.Id" class="btn btn-warning mx-5">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <a class="btn btn-danger">
+                        <a class="btn btn-danger" asp-controller="Persons" asp-action="Delete"
+                           asp-route-id="@person.Id">
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </td>

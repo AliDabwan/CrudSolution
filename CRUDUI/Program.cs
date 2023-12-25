@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts.Interfaces;
 using Services;
 
@@ -7,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ICountriesService, CountriesService>();
 builder.Services.AddSingleton<IPersonService, PersonService>();
+
+builder.Services.AddDbContext<CRUDDbContext>(opt =>
+{
+    opt.UseSqlServer();
+}
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
