@@ -79,8 +79,10 @@ namespace Services
             person.Id = Guid.NewGuid();
 
             //add person object to persons list
-            _dbContext.Persons.Add(person);
-            _dbContext.SaveChanges();
+            //_dbContext.Persons.Add(person);
+            //_dbContext.SaveChanges();
+
+            _dbContext.Sp_InsertPerson(person);
 
             //convert the Person object into PersonForReturnDTO type
             PersonForReturnDTO personForReturnDTO = person.ToPersonForReturn();
@@ -91,8 +93,11 @@ namespace Services
         public List<PersonForReturnDTO> GetAllPersons()
         {
             //return _persons.Select(c => c.ToPersonForReturn()).ToList();
-            return _dbContext.Persons.ToList().Select(c => 
-            ConvertPersonToPersonForReturnDTO(c)).ToList();
+            //return _dbContext.Persons.ToList().Select(c => 
+            //ConvertPersonToPersonForReturnDTO(c)).ToList();
+
+            return _dbContext.Sp_GetAllPersons().Select(c =>
+          ConvertPersonToPersonForReturnDTO(c)).ToList();
 
         }
 

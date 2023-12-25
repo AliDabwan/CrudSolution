@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,5 +60,25 @@ namespace Entities
 
             return _persons;
         }
+
+
+        public List<Person> Sp_GetAllPersons()
+        {
+            return Persons.FromSqlRaw("Execute GetAllPersons").ToList();
+        }
+        public int Sp_InsertPerson(Person person)
+        {
+            SqlParameter[] parameters = new SqlParameter[] {
+        new SqlParameter("@Id", person.Id),
+        new SqlParameter("@Name", person.Name),
+        new SqlParameter("@Email", person.Email),
+        new SqlParameter("@DateOfBirth", person.DateOfBirth),
+        new SqlParameter("@Gender", person.Gender),
+        new SqlParameter("@CountryId", person.CountryId),
+        new SqlParameter("@ReceiveEmails", person.ReceiveEmails)
+      };
+            return Database.ExecuteSqlRaw("EXECUTE InsertPerson @Id, @Name, @Email, @DateOfBirth, @Gender, @CountryId, @ReceiveEmails", parameters);
+        }
+
     }
 }
