@@ -29,6 +29,7 @@ namespace CRUDUI.Controllers
                 {nameof(PersonForReturnDTO.Email),"Email" },
                 {nameof(PersonForReturnDTO.DateOfBirth),"Date of Birth" },
                 {nameof(PersonForReturnDTO.Gender),"Gender" },
+                {nameof(PersonForReturnDTO.Country),"Country" },
 
             };
             //search

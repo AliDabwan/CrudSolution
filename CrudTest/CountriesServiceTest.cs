@@ -1,4 +1,6 @@
-﻿using ServiceContracts.DTOS;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContracts.DTOS;
 using ServiceContracts.Interfaces;
 using Services;
 using System;
@@ -15,7 +17,8 @@ namespace CrudTest
 
         public CountriesServiceTest()
         {
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService(new CRUDDbContext(
+                new DbContextOptionsBuilder<CRUDDbContext>().Options ));
         }
         #region AddCountry
         //When CountryForCreateDTO is null, it should throw ArgumentNullException

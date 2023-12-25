@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTOS;
 using ServiceContracts.Enums;
 using ServiceContracts.Interfaces;
@@ -20,8 +21,13 @@ namespace CrudTest
 
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _personsService=new PersonService(false);
-            _countriesService=new CountriesService(false);
+            _countriesService = new CountriesService(new CRUDDbContext(
+               new DbContextOptionsBuilder<CRUDDbContext>().Options));
+
+            _personsService =new PersonService(new CRUDDbContext(
+                new DbContextOptionsBuilder<CRUDDbContext>().Options), _countriesService);
+
+           
             _testOutputHelper = testOutputHelper;
         }
         #region AddPerson
