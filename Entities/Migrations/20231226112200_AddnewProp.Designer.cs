@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(CRUDDbContext))]
-    partial class CRUDDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231226112200_AddnewProp")]
+    partial class AddnewProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,11 +92,7 @@ namespace Entities.Migrations
                         .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("PN")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchr(9)")
-                        .HasDefaultValue("None")
-                        .HasColumnName("PassportNumber");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("ReceiveEmails")
                         .HasColumnType("bit");

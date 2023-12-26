@@ -26,6 +26,23 @@ namespace Entities
             countries.ForEach(c=>modelBuilder.Entity<Country>().HasData(c));
             persons.ForEach(p=>modelBuilder.Entity<Person>().HasData(p));
 
+            // edit colun name
+            modelBuilder.Entity<Person>().Property(p => p.PN).IsRequired()
+                .HasColumnName("PassportNumber")
+                .HasColumnType("nvarchar(9)")
+                .HasDefaultValue("None");
+
+            /// we can only use default value or is uniqe not both
+            //modelBuilder.Entity<Person>().HasIndex(p=>p.PN).IsUnique();
+
+
+            //Table Relations
+
+            modelBuilder.Entity<Person>(p =>
+            p.HasOne<Country>(p => p.Country)
+            .WithMany(c =>c.Person)
+            );
+
         }
         private static List<Country> CountriesToSeed()
         {

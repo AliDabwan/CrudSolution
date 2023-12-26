@@ -12,6 +12,7 @@ namespace Entities
         public Guid Id { get; set; }
         [StringLength(40)]
         public string? Name { get; set; }
+        public ICollection<Person> Persons { get; set; }
 
 
 

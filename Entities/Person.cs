@@ -20,5 +20,6 @@ namespace Entities
         public Guid? CountryId { get; set; } //Foreign Key
         public Country? Country { get; set; } //Navigation Property
         public bool ReceiveEmails { get; set; }
+        public string? PN { get; set; }
     }
 }
