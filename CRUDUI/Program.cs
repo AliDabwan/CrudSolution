@@ -1,5 +1,6 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 using ServiceContracts.Interfaces;
 using Services;
 
@@ -22,6 +23,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+RotativaConfiguration.Setup(builder.Environment.WebRootPath);
 app.UseStaticFiles();
 
 app.UseRouting();

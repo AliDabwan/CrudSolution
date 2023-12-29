@@ -38,10 +38,12 @@ namespace Entities
 
             //Table Relations
 
-            modelBuilder.Entity<Person>(p =>
-            p.HasOne<Country>(p => p.Country)
-            .WithMany(c =>c.Person)
-            );
+            //modelBuilder.Entity<Person>(p =>
+            //p.HasOne<Country>(p => p.Country)
+            //.WithMany(c =>c.Persons)
+            //.HasForeignKey(p=> p.CountryId)
+            //);
+
 
         }
         private static List<Country> CountriesToSeed()

@@ -10,16 +10,16 @@ namespace ServiceContracts.Interfaces
 {
     public interface IPersonService
     {
-        PersonForReturnDTO AddPerson(PersonForCreateDTO personForCreateDTO);
+        Task<PersonForReturnDTO> AddPerson(PersonForCreateDTO personForCreateDTO);
 
-        List<PersonForReturnDTO> GetAllPersons();
-        PersonForReturnDTO? GetPersonById(Guid? id);
+         Task<List<PersonForReturnDTO>> GetAllPersons();
+         Task<PersonForReturnDTO?> GetPersonById(Guid? id);
 
-        List<PersonForReturnDTO> GetFilteredPersons(string searchBy, string? searchString);
+         Task<List<PersonForReturnDTO>> GetFilteredPersons(string searchBy, string? searchString);
 
-        List<PersonForReturnDTO> GetSortedPersons(List<PersonForReturnDTO> allPersons, string sortBy, SortOrderOptions sortOrder);
+         List<PersonForReturnDTO> GetSortedPersons(List<PersonForReturnDTO> allPersons, string sortBy, SortOrderOptions sortOrder);
 
-        PersonForReturnDTO UpdatePerson(PersonForUpdateDto personForUpdateDto);
-        bool DeletePerson(Guid? id);
+        Task<PersonForReturnDTO> UpdatePerson(PersonForUpdateDto personForUpdateDto);
+        Task<bool> DeletePerson(Guid? id);
     }
 }

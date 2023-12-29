@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
 using ServiceContracts.DTOS;
 using ServiceContracts.Enums;
 using ServiceContracts.Interfaces;
+using Services;
 
 namespace CRUDUI.Controllers
 {
@@ -21,7 +23,7 @@ namespace CRUDUI.Controllers
         [Route("persons")]
         [Route("persons/index")]
 
-        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonForReturnDTO.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
+        public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonForReturnDTO.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
@@ -33,7 +35,7 @@ namespace CRUDUI.Controllers
 
             };
             //search
-            List<PersonForReturnDTO> persons = _personService.GetFilteredPersons(searchBy, searchString);
+            List<PersonForReturnDTO> persons =await _personService.GetFilteredPersons(searchBy, searchString);
 
             ViewBag.CurrentSearchBy = searchBy;
             ViewBag.CurrentSearchString = searchString;
@@ -50,8 +52,8 @@ namespace CRUDUI.Controllers
         }
         [Route("/persons/create")]
         [HttpGet]
-        public IActionResult Create() {
-            List<CountryForReturnDto>countries = _countriesService.GetAllCountries();
+        public async Task<IActionResult> Create() {
+            List<CountryForReturnDto>countries =await _countriesService.GetAllCountries();
             //ViewBag.Countries = countries;
             ViewBag.Countries = countries.Select(c=>new SelectListItem
             {
@@ -65,11 +67,11 @@ namespace CRUDUI.Controllers
 
         [Route("/persons/create")]
         [HttpPost]
-        public IActionResult Create(PersonForCreateDTO person)
+        public async Task<IActionResult> Create(PersonForCreateDTO person)
         {
             if(!ModelState.IsValid)
             {
-                List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+                List<CountryForReturnDto> countries =await _countriesService.GetAllCountries();
                 ViewBag.Countries = countries.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -81,15 +83,15 @@ namespace CRUDUI.Controllers
                 return View();
 
             }
-            _personService.AddPerson(person);
+          await  _personService.AddPerson(person);
             return RedirectToAction("Index","Persons");
         }
 
         [Route("/persons/update/{id}")]
         [HttpGet]
-        public IActionResult Update(Guid id)
+        public async Task<IActionResult> Update(Guid id)
         {
-            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(id);
+            PersonForReturnDTO? personForReturnDTO =await _personService.GetPersonById(id);
 
             if(personForReturnDTO == null)
             {
@@ -97,7 +99,7 @@ namespace CRUDUI.Controllers
             }
 
             PersonForUpdateDto personForUpdateDto=personForReturnDTO.ToPersonForUpdateDTO();
-            List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+            List<CountryForReturnDto> countries =await _countriesService.GetAllCountries();
             //ViewBag.Countries = countries;
             ViewBag.Countries = countries.Select(c => new SelectListItem
             {
@@ -112,9 +114,9 @@ namespace CRUDUI.Controllers
 
         [Route("/persons/update/{id}")]
         [HttpPost]
-        public IActionResult Update(PersonForUpdateDto personForUpdateDto)
+        public async Task<IActionResult> Update(PersonForUpdateDto personForUpdateDto)
         {
-            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(personForUpdateDto.Id);
+            PersonForReturnDTO? personForReturnDTO =await _personService.GetPersonById(personForUpdateDto.Id);
 
             if (personForReturnDTO == null)
             {
@@ -122,7 +124,7 @@ namespace CRUDUI.Controllers
             }
             if (!ModelState.IsValid)
             {
-                List<CountryForReturnDto> countries = _countriesService.GetAllCountries();
+                List<CountryForReturnDto> countries =await _countriesService.GetAllCountries();
                 ViewBag.Countries = countries.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -134,7 +136,7 @@ namespace CRUDUI.Controllers
                 return View();
 
             }
-            _personService.UpdatePerson(personForUpdateDto);
+           await _personService.UpdatePerson(personForUpdateDto);
             return RedirectToAction("Index", "Persons");
         }
 
@@ -142,9 +144,9 @@ namespace CRUDUI.Controllers
 
         [Route("/persons/delete/{id}")]
         [HttpGet]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            PersonForReturnDTO? personForReturnDTO = _personService.GetPersonById(id);
+            PersonForReturnDTO? personForReturnDTO =await _personService.GetPersonById(id);
 
             if (personForReturnDTO == null)
             {
@@ -158,18 +160,40 @@ namespace CRUDUI.Controllers
 
         [Route("/persons/delete/{id}")]
         [HttpPost]
-        public IActionResult Delete(PersonForReturnDTO personForReturnDTO)
+        public async Task<IActionResult> Delete(PersonForReturnDTO personForReturnDTO)
         {
-            PersonForReturnDTO? personFordelete = _personService.GetPersonById(personForReturnDTO.Id);
+            PersonForReturnDTO? personFordelete =await _personService.GetPersonById(personForReturnDTO.Id);
 
             if (personFordelete == null)
             {
                 return RedirectToAction("index");
             }
            
-            _personService.DeletePerson(personFordelete.Id);
+          await  _personService.DeletePerson(personFordelete.Id);
             return RedirectToAction("Index", "Persons");
         }
+
+        [Route("PersonsPdf")]
+        public async Task<IActionResult> PersonsPdf()
+        {
+            //Get list of persons
+            List<PersonForReturnDTO> persons =
+                await _personService.GetAllPersons();
+
+            //Return view as pdf
+            return new ViewAsPdf("PersonsPdf", persons, ViewData)
+            {
+                PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                FileName = "PersonsPdf_" + DateTime.Now.ToString("mm-dd HH:MM:ss") + ".pdf"
+
+
+
+            };
+        }
+
+
+
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTOS;
 using ServiceContracts.Interfaces;
 using System;
@@ -36,7 +37,7 @@ namespace Services
 
 
         }
-        public CountryForReturnDto AddCountry(CountryForCreateDto? countryForCreateDTO)
+        public async Task<CountryForReturnDto> AddCountry(CountryForCreateDto? countryForCreateDTO)
         {
             //Validation: countryForCreateDTO parameter can't be null
             if (countryForCreateDTO == null)
@@ -64,22 +65,22 @@ namespace Services
 
             //Validation: Every thing is ok , Add country object into _countries
             _dbContext.Countries.Add(country);
-            _dbContext.SaveChanges();
+           await _dbContext.SaveChangesAsync();
             return country.ToCountryForReturn();
         }
 
-        public List<CountryForReturnDto> GetAllCountries()
+        public async Task<List<CountryForReturnDto>> GetAllCountries()
         {
-            return _dbContext.Countries.Select(c=>c.ToCountryForReturn()).ToList();
+            return await _dbContext.Countries.Select(c=>c.ToCountryForReturn()).ToListAsync();
         }
 
-        public CountryForReturnDto? GetCountryById(Guid? id)
+        public async Task<CountryForReturnDto?> GetCountryById(Guid? id)
         {
             if (id == null)
             {
                 return null;
             }
-            Country? country= _dbContext.Countries.FirstOrDefault(c => c.Id==id);
+            Country? country=await _dbContext.Countries.FirstOrDefaultAsync(c => c.Id==id);
             if (country == null) { return null; }
             return country.ToCountryForReturn();
         }

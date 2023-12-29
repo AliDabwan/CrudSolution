@@ -66,6 +66,7 @@ namespace ServiceContracts.DTOS
                 Email = person.Email,
                 DateOfBirth = person.DateOfBirth,
                 CountryId = person.CountryId,
+                Country = person.Country?.Name,
                 Gender = person.Gender,
                 ReceiveEmails = person.ReceiveEmails,
                 Age = (person.DateOfBirth != null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null

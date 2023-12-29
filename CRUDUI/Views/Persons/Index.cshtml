@@ -9,7 +9,15 @@
             <h2 class="text-Dark ">Persons List</h2>
         </div>
         <div class="col text-end pt-2">
-            <a href="~/persons/create" class="btn btn-outline-success"><i class="bi bi-plus-square-fill"></i> Add New Person</a>
+            <a href="~/persons/create" 
+            class="btn btn-outline-success">
+            <i class="bi bi-plus-square-fill"></i> Add New Person</a>
+        </div>
+        <div class="col text-end pt-2">
+            <a asp-controller="Persons" asp-action="PersonsPdf"
+               class="btn btn-outline-dark">
+                <i class="bi bi-plus-square-fill"></i> View PDF
+            </a>
         </div>
     </div>
 

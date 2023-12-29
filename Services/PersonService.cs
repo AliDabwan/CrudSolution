@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTOS;
 using ServiceContracts.Enums;
 using ServiceContracts.Interfaces;
@@ -47,13 +48,13 @@ namespace Services
             //}
         }
 
-        private PersonForReturnDTO ConvertPersonToPersonForReturnDTO(Person person)
-        {
-            PersonForReturnDTO personForReturnDTO = person.ToPersonForReturn();
-            personForReturnDTO.Country = _countriesService.GetCountryById(person.CountryId)?.Name;
-            return personForReturnDTO;
-        }
-        public PersonForReturnDTO AddPerson(PersonForCreateDTO personForCreateDTO)
+        //private PersonForReturnDTO ConvertPersonToPersonForReturnDTO(Person person)
+        //{
+        //    PersonForReturnDTO personForReturnDTO = person.ToPersonForReturn();
+        //    personForReturnDTO.Country = _countriesService.GetCountryById(person.CountryId)?.Name;
+        //    return personForReturnDTO;
+        //}
+        public async Task<PersonForReturnDTO> AddPerson(PersonForCreateDTO personForCreateDTO)
         {
             //check if PersonForCreateDTO is not null
             if (personForCreateDTO == null)
@@ -79,43 +80,47 @@ namespace Services
             person.Id = Guid.NewGuid();
 
             //add person object to persons list
-            //_dbContext.Persons.Add(person);
-            //_dbContext.SaveChanges();
+            _dbContext.Persons.Add(person);
+           await _dbContext.SaveChangesAsync();
 
-            _dbContext.Sp_InsertPerson(person);
+            //_dbContext.Sp_InsertPerson(person);
 
             //convert the Person object into PersonForReturnDTO type
-            PersonForReturnDTO personForReturnDTO = person.ToPersonForReturn();
-            personForReturnDTO.Country = _countriesService.GetCountryById(person.CountryId)?.Name;
-            return personForReturnDTO;
+           return person.ToPersonForReturn();
         }
 
-        public List<PersonForReturnDTO> GetAllPersons()
+        public async Task<List<PersonForReturnDTO>> GetAllPersons()
         {
             //return _persons.Select(c => c.ToPersonForReturn()).ToList();
             //return _dbContext.Persons.ToList().Select(c => 
             //ConvertPersonToPersonForReturnDTO(c)).ToList();
 
-            return _dbContext.Sp_GetAllPersons().Select(c =>
-          ConvertPersonToPersonForReturnDTO(c)).ToList();
+            var persons=await _dbContext.Persons.Include(p => p.Country).ToListAsync();
+            //  return _dbContext.Sp_GetAllPersons().Select(c =>
+            //ConvertPersonToPersonForReturnDTO(c)).ToList();
+
+            return persons.Select(c =>
+            c.ToPersonForReturn()).ToList();
 
         }
 
-        public PersonForReturnDTO? GetPersonById(Guid? id)
+        public async Task<PersonForReturnDTO?> GetPersonById(Guid? id)
         {
             if (id == null)
             {
                 return null;
             }
-            Person? person = _dbContext.Persons.FirstOrDefault(c => c.Id == id);
+            Person? person =await _dbContext.Persons
+                .Include(p=>p.Country)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (person == null) { return null; }
             //return person.ToPersonForReturn();
-            return ConvertPersonToPersonForReturnDTO( person);
+            return person.ToPersonForReturn();
         }
 
-        public List<PersonForReturnDTO> GetFilteredPersons(string searchBy, string? searchString)
+        public async Task<List<PersonForReturnDTO>> GetFilteredPersons(string searchBy, string? searchString)
         {
-            List<PersonForReturnDTO> allPersons = GetAllPersons();
+            List<PersonForReturnDTO> allPersons = await GetAllPersons();
             List<PersonForReturnDTO> matchingPersons = allPersons;
 
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
@@ -192,7 +197,7 @@ namespace Services
             return sortedPersons;
         }
 
-        public PersonForReturnDTO UpdatePerson(PersonForUpdateDto personForUpdateDto)
+        public async Task<PersonForReturnDTO> UpdatePerson(PersonForUpdateDto personForUpdateDto)
         {
             if (personForUpdateDto == null)
                 throw new ArgumentNullException(nameof(Person));
@@ -201,7 +206,8 @@ namespace Services
             Helper.ValidateModel(personForUpdateDto);
 
             //get matching person object to update
-            Person? personForUpdate = _dbContext.Persons.FirstOrDefault(p => p.Id == personForUpdateDto.Id);
+            Person? personForUpdate =await _dbContext.
+                Persons.FirstOrDefaultAsync(p => p.Id == personForUpdateDto.Id);
             if (personForUpdate == null)
             {
                 throw new ArgumentException("Given person id doesn't exist");
@@ -214,23 +220,24 @@ namespace Services
             personForUpdate.Gender = personForUpdateDto.Gender.ToString();
             personForUpdate.CountryId = personForUpdateDto.CountryId;
             personForUpdate.ReceiveEmails = personForUpdateDto.ReceiveEmails;
-
+            _dbContext.Persons.Update(personForUpdate);
+            await _dbContext.SaveChangesAsync();
             return personForUpdate.ToPersonForReturn();
         }
 
-        public bool DeletePerson(Guid? id)
+        public async Task<bool> DeletePerson(Guid? id)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
-
-            Person? person = _dbContext.Persons.FirstOrDefault(p => p.Id == id);
+            
+            Person? person =await _dbContext.Persons.FirstOrDefaultAsync(p => p.Id == id);
             if (person == null)
                 return false;
 
             _dbContext.Persons.Remove(person);
-            _dbContext.SaveChanges();
+           await _dbContext.SaveChangesAsync();
             return true;
         }
     }

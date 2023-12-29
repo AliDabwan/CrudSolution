@@ -34,45 +34,45 @@ namespace CrudTest
 
         //When we supply null value as PersonForCreateDTO, it should throw ArgumentNullException
         [Fact]
-        public void AddPerson_NullPerson()
+        public async Task AddPerson_NullPerson()
         {
             //Arrange
             PersonForCreateDTO? personForCreateDTO = null;
 
             //Act
-            Assert.Throws<ArgumentNullException>(() =>
+           await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                _personsService.AddPerson(personForCreateDTO);
+             await   _personsService.AddPerson(personForCreateDTO);
             });
         }
 
 
         //When we supply null value as Person Name, it should throw ArgumentException
         [Fact]
-        public void AddPerson_PersonNameIsNull()
+        public async Task AddPerson_PersonNameIsNull()
         {
             //Arrange
             PersonForCreateDTO? personForCreateDTO = new () { Name = null };
 
             //Act
-            Assert.Throws<ArgumentException>(() =>
+           await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                _personsService.AddPerson(personForCreateDTO);
+             await   _personsService.AddPerson(personForCreateDTO);
             });
         }
 
         //When we supply proper person details, it should insert the person into the persons list; 	and it should return an object of PersonForReturnDTO, which includes with the newly 	generated person id
         [Fact]
-        public void AddPerson_ProperPersonDetails()
+        public async Task AddPerson_ProperPersonDetails()
         {
             //Arrange
             PersonForCreateDTO? personForCreateDTO = new ()
             { Name = "Person 	name...", Email = "person@example.com", CountryId = Guid.NewGuid(), Gender = GenderOptions.Male, DateOfBirth = DateTime.Parse("2000-01-01"), ReceiveEmails = true };
 
             //Act
-            PersonForReturnDTO personForReturnDTO_from_add = _personsService.AddPerson(personForCreateDTO);
+            PersonForReturnDTO personForReturnDTO_from_add =await _personsService.AddPerson(personForCreateDTO);
 
-            List<PersonForReturnDTO> persons_list = _personsService.GetAllPersons();
+            List<PersonForReturnDTO> persons_list =await _personsService.GetAllPersons();
 
             //Assert
             Assert.True(personForReturnDTO_from_add.Id != Guid.Empty);
@@ -86,10 +86,10 @@ namespace CrudTest
 
         //The GetAllPersons() should return an empty list by default
         [Fact]
-        public void GetAllPersons_EmptyList()
+        public async Task GetAllPersons_EmptyList()
         {
             //Act
-            List<PersonForReturnDTO> persons_from_get = _personsService.GetAllPersons();
+            List<PersonForReturnDTO> persons_from_get =await _personsService.GetAllPersons();
 
             //Assert
             Assert.Empty(persons_from_get);
@@ -98,14 +98,14 @@ namespace CrudTest
 
         //First, we will add few persons; and then when we call GetAllPersons(), it should return the same persons that were added
         [Fact]
-        public void GetAllPersons_AddFewPersons()
+        public async Task GetAllPersons_AddFewPersons()
         {
             //Arrange
             CountryForCreateDto countryForCreate_1 = new() { Name = "Egypt" };
             CountryForCreateDto countryForCreate_2 = new() { Name = "Jordan" };
 
-            CountryForReturnDto countryForReturn_1 = _countriesService.AddCountry(countryForCreate_1);
-            CountryForReturnDto countryForReturn_2 = _countriesService.AddCountry(countryForCreate_2);
+            CountryForReturnDto countryForReturn_1 =await _countriesService.AddCountry(countryForCreate_1);
+            CountryForReturnDto countryForReturn_2 =await _countriesService.AddCountry(countryForCreate_2);
 
             PersonForCreateDTO personForCreate_1 = new() { Name = "Saad", Email = "sa@email.com", Gender = GenderOptions.Male, CountryId = countryForReturn_2.Id, DateOfBirth = DateTime.Parse("1979-01-01"), ReceiveEmails = true };
 
@@ -119,7 +119,7 @@ namespace CrudTest
 
             foreach (PersonForCreateDTO personForCreate in personForCreate_list)
             {
-                PersonForReturnDTO personForReturnDTO = _personsService.AddPerson(personForCreate);
+                PersonForReturnDTO personForReturnDTO =await _personsService.AddPerson(personForCreate);
                 personForReturn_list_from_add.Add(personForReturnDTO);
             }
 
@@ -131,7 +131,7 @@ namespace CrudTest
             });
             //Act
             List<PersonForReturnDTO> persons_list_from_get =
-                _personsService.GetAllPersons();
+              await  _personsService.GetAllPersons();
 
             //display acctual data
             _testOutputHelper.WriteLine(message: "Acctualdata");
@@ -153,13 +153,13 @@ namespace CrudTest
 
         //If we supply null as Person Id, it should return null as PersonForReturnDTO
         [Fact]
-        public void GetPersonById_NullPersonId()
+        public async Task GetPersonById_NullPersonId()
         {
             //Arrange
             Guid? personId = null;
 
             //Act
-            PersonForReturnDTO? personForReturnDTO_from_get = _personsService.GetPersonById(personId);
+            PersonForReturnDTO? personForReturnDTO_from_get =await _personsService.GetPersonById(personId);
 
             //Assert
             Assert.Null(personForReturnDTO_from_get);
@@ -168,17 +168,17 @@ namespace CrudTest
 
         //If we supply a valid person id, it should return the valid person details as PersonForReturnDTO object
         [Fact]
-        public void GetPersonById_WithPersonId()
+        public async Task GetPersonById_WithPersonId()
         {
             //Arange
             CountryForCreateDto countryForCreateDTO = new() { Name = "Egypt" };
-            CountryForReturnDto countryForReturnDTO = _countriesService.AddCountry(countryForCreateDTO);
+            CountryForReturnDto countryForReturnDTO =await _countriesService.AddCountry(countryForCreateDTO);
 
             PersonForCreateDTO personForCreateDTO = new() { Name = "Muhammad", Email = "mo@email.com", CountryId = countryForReturnDTO.Id, DateOfBirth = DateTime.Parse("1981-01-01"), Gender = GenderOptions.Male, ReceiveEmails = false };
 
-            PersonForReturnDTO personForReturnDTO_from_add = _personsService.AddPerson(personForCreateDTO);
+            PersonForReturnDTO personForReturnDTO_from_add = await _personsService.AddPerson(personForCreateDTO);
 
-            PersonForReturnDTO? personForReturnDTO_from_get = _personsService.GetPersonById(personForReturnDTO_from_add.Id);
+            PersonForReturnDTO? personForReturnDTO_from_get =await _personsService.GetPersonById(personForReturnDTO_from_add.Id);
 
             //Assert
             Assert.Equal(personForReturnDTO_from_add, personForReturnDTO_from_get);
@@ -189,14 +189,14 @@ namespace CrudTest
         #region GetFilteredPersons
         //If the search text is empty and search by is "Name", it should return all persons
         [Fact]
-        public void GetFilteredPersons_EmptySearchText()
+        public async Task GetFilteredPersons_EmptySearchText()
         {
             //Arrange
             CountryForCreateDto countryForCreate_1 = new() { Name = "Egypt" };
             CountryForCreateDto countryForCreate_2 = new() { Name = "Jordan" };
 
-            CountryForReturnDto countryForReturn_1 = _countriesService.AddCountry(countryForCreate_1);
-            CountryForReturnDto countryForReturn_2 = _countriesService.AddCountry(countryForCreate_2);
+            CountryForReturnDto countryForReturn_1 =await _countriesService.AddCountry(countryForCreate_1);
+            CountryForReturnDto countryForReturn_2 = await _countriesService.AddCountry(countryForCreate_2);
 
             PersonForCreateDTO personForCreate_1 = new() { Name = "Saad", Email = "sa@email.com", Gender = GenderOptions.Male, CountryId = countryForReturn_2.Id, DateOfBirth = DateTime.Parse("1979-01-01"), ReceiveEmails = true };
 
@@ -210,7 +210,7 @@ namespace CrudTest
 
             foreach (PersonForCreateDTO personForCreate in personForCreate_list)
             {
-                PersonForReturnDTO personForReturnDTO = _personsService.AddPerson(personForCreate);
+                PersonForReturnDTO personForReturnDTO =await _personsService.AddPerson(personForCreate);
                 personForReturn_list_from_add.Add(personForReturnDTO);
             }
 
@@ -222,7 +222,7 @@ namespace CrudTest
             });
 
             //Act
-            List<PersonForReturnDTO> persons_list_from_search = _personsService.GetFilteredPersons(nameof(Person.Name), "");
+            List<PersonForReturnDTO> persons_list_from_search = await _personsService.GetFilteredPersons(nameof(Person.Name), "");
 
             //Display Actual Data
             _testOutputHelper.WriteLine("Actual:");
@@ -240,14 +240,14 @@ namespace CrudTest
 
         //First we will add few persons; and then we will search based on person name with some search string. It should return the matching persons
         [Fact]
-        public void GetFilteredPersons_SearchByPersonName()
+        public async Task GetFilteredPersons_SearchByPersonName()
         {
             //Arrange
             CountryForCreateDto countryForCreate_1 = new() { Name = "Egypt" };
             CountryForCreateDto countryForCreate_2 = new() { Name = "Jordan" };
 
-            CountryForReturnDto countryForReturn_1 = _countriesService.AddCountry(countryForCreate_1);
-            CountryForReturnDto countryForReturn_2 = _countriesService.AddCountry(countryForCreate_2);
+            CountryForReturnDto countryForReturn_1 =await _countriesService.AddCountry(countryForCreate_1);
+            CountryForReturnDto countryForReturn_2 = await _countriesService.AddCountry(countryForCreate_2);
 
             PersonForCreateDTO personForCreate_1 = new() { Name = "Saad", Email = "sa@email.com", Gender = GenderOptions.Male, CountryId = countryForReturn_2.Id, DateOfBirth = DateTime.Parse("1979-01-01"), ReceiveEmails = true };
 
@@ -261,7 +261,7 @@ namespace CrudTest
 
             foreach (PersonForCreateDTO personForCreate in personForCreate_list)
             {
-                PersonForReturnDTO personForReturnDTO = _personsService.AddPerson(personForCreate);
+                PersonForReturnDTO personForReturnDTO =await _personsService.AddPerson(personForCreate);
                 personForReturn_list_from_add.Add(personForReturnDTO);
             }
 
@@ -273,7 +273,7 @@ namespace CrudTest
             });
 
             //Act
-            List<PersonForReturnDTO> persons_list_from_search = _personsService.GetFilteredPersons(nameof(Person.Name), "am");
+            List<PersonForReturnDTO> persons_list_from_search =await _personsService.GetFilteredPersons(nameof(Person.Name), "am");
 
             //Display Actual Data
             _testOutputHelper.WriteLine("Actual:");
@@ -300,14 +300,14 @@ namespace CrudTest
 
         //When we sort based on Person Name in ASC, it should return persons list in ascending on Person Name
         [Fact]
-        public void GetSortedPersons()
+        public async Task GetSortedPersons()
         {
             //Arrange
             CountryForCreateDto countryForCreate_1 = new() { Name = "Egypt" };
             CountryForCreateDto countryForCreate_2 = new() { Name = "Jordan" };
 
-            CountryForReturnDto countryForReturn_1 = _countriesService.AddCountry(countryForCreate_1);
-            CountryForReturnDto countryForReturn_2 = _countriesService.AddCountry(countryForCreate_2);
+            CountryForReturnDto countryForReturn_1 =await _countriesService.AddCountry(countryForCreate_1);
+            CountryForReturnDto countryForReturn_2 =await _countriesService.AddCountry(countryForCreate_2);
 
             PersonForCreateDTO personForCreate_1 = new() { Name = "Saad", Email = "sa@email.com", Gender = GenderOptions.Male, CountryId = countryForReturn_2.Id, DateOfBirth = DateTime.Parse("1979-01-01"), ReceiveEmails = true };
 
@@ -321,7 +321,7 @@ namespace CrudTest
 
             foreach (PersonForCreateDTO personForCreate in personForCreate_list)
             {
-                PersonForReturnDTO personForReturnDTO = _personsService.AddPerson(personForCreate);
+                PersonForReturnDTO personForReturnDTO =await _personsService.AddPerson(personForCreate);
                 personForReturn_list_from_add.Add(personForReturnDTO);
             }
 
@@ -332,7 +332,7 @@ namespace CrudTest
                 _testOutputHelper.WriteLine(p.ToString());
             });
 
-            List<PersonForReturnDTO> allPersons = _personsService.GetAllPersons();
+            List<PersonForReturnDTO> allPersons =await _personsService.GetAllPersons();
             //Act
             List<PersonForReturnDTO> persons_list_from_sort = _personsService.GetSortedPersons(allPersons, nameof(Person.Name), SortOrderOptions.ASC);
 
@@ -356,56 +356,56 @@ namespace CrudTest
 
         //When we supply null as PersonForUpdateDTO, it should throw ArgumentNullException
         [Fact]
-        public void UpdatePerson_NullPerson()
+        public async Task UpdatePerson_NullPerson()
         {
             //Arrange
             PersonForUpdateDto? personForUpdateDTO = null;
 
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+           await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
-                _personsService.UpdatePerson(personForUpdateDTO);
+              await  _personsService.UpdatePerson(personForUpdateDTO);
             });
         }
 
 
         //When we supply invalid person id, it should throw ArgumentException
         [Fact]
-        public void UpdatePerson_InvalidPersonID()
+        public async void UpdatePerson_InvalidPersonID()
         {
             //Arrange
             PersonForUpdateDto? personForUpdateDTO = new() { Id = Guid.NewGuid() };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+           await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                _personsService.UpdatePerson(personForUpdateDTO);
+             await   _personsService.UpdatePerson(personForUpdateDTO);
             });
         }
 
         //Validations
         //When Person Name is null, it should throw ArgumentException
         [Fact]
-        public void UpdatePerson_PersonNameIsNull()
+        public async Task UpdatePerson_PersonNameIsNull()
         {
             //Arrange
             CountryForCreateDto countryForCreateDTO = new() { Name = "Egypt" };
-            CountryForReturnDto countryForReturnDTO = _countriesService.AddCountry(countryForCreateDTO);
+            CountryForReturnDto countryForReturnDTO =await _countriesService.AddCountry(countryForCreateDTO);
 
             PersonForCreateDTO personForCreateDTO = new() { Name = "Amir", CountryId = countryForReturnDTO.Id, Email = "amir@email.com", Gender = GenderOptions.Male };
 
-            PersonForReturnDTO personForReturnDTO_from_add = _personsService.AddPerson(personForCreateDTO);
+            PersonForReturnDTO personForReturnDTO_from_add =await _personsService.AddPerson(personForCreateDTO);
 
             PersonForUpdateDto personForUpdateDTO = personForReturnDTO_from_add.ToPersonForUpdateDTO();
             personForUpdateDTO.Name = null;
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                _personsService.UpdatePerson(personForUpdateDTO);
+            await    _personsService.UpdatePerson(personForUpdateDTO);
             });
 
         }
@@ -413,15 +413,15 @@ namespace CrudTest
 
         //First, add a new person and try to update the person name,email,gender
         [Fact]
-        public void UpdatePerson_PersonFullDetailsUpdate()
+        public async Task UpdatePerson_PersonFullDetailsUpdate()
         {
             //Arrange
             CountryForCreateDto countryForCreateDTO = new() { Name = "Egypt" };
-            CountryForReturnDto countryForReturnDTO = _countriesService.AddCountry(countryForCreateDTO);
+            CountryForReturnDto countryForReturnDTO =await _countriesService.AddCountry(countryForCreateDTO);
 
             PersonForCreateDTO personForCreateDTO = new() { Name = "Amir", CountryId = countryForReturnDTO.Id, Email = "amir@email.com", Gender = GenderOptions.Male };
 
-            PersonForReturnDTO personForReturnDTO_from_add = _personsService.AddPerson(personForCreateDTO);
+            PersonForReturnDTO personForReturnDTO_from_add =await _personsService.AddPerson(personForCreateDTO);
 
             //Display Person before update
             _testOutputHelper.WriteLine("Person before update:");
@@ -433,9 +433,9 @@ namespace CrudTest
             PersonForUpdateDTO.Gender = GenderOptions.Female;
 
             //Act
-            PersonForReturnDTO personForReturnDTO_from_update = _personsService.UpdatePerson(PersonForUpdateDTO);
+            PersonForReturnDTO personForReturnDTO_from_update =await _personsService.UpdatePerson(PersonForUpdateDTO);
 
-            PersonForReturnDTO? personForReturnDTO_from_get = _personsService.GetPersonById(personForReturnDTO_from_update.Id);
+            PersonForReturnDTO? personForReturnDTO_from_get =await _personsService.GetPersonById(personForReturnDTO_from_update.Id);
 
             //Display Person after update
             _testOutputHelper.WriteLine("Person after update:");
@@ -450,10 +450,10 @@ namespace CrudTest
 
         //If you supply an invalid Person Id, it should return false
         [Fact]
-        public void DeletePerson_InvalidPersonID()
+        public async Task DeletePerson_InvalidPersonID()
         {
             //Act
-            bool isDeleted = _personsService.DeletePerson(Guid.NewGuid());
+            bool isDeleted =await _personsService.DeletePerson(Guid.NewGuid());
 
             //Assert
             Assert.False(isDeleted);
@@ -461,18 +461,18 @@ namespace CrudTest
 
         //If you supply an valid Person ID, it should return true
         [Fact]
-        public void DeletePerson_ValidPersonID()
+        public async Task DeletePerson_ValidPersonID()
         {
             //Arrange
             CountryForCreateDto countryForCreateDTO = new() { Name = "Egypt" };
-            CountryForReturnDto CountryForReturnDTO_from_add = _countriesService.AddCountry(countryForCreateDTO);
+            CountryForReturnDto CountryForReturnDTO_from_add =await _countriesService.AddCountry(countryForCreateDTO);
 
             PersonForCreateDTO personForCreateDTO = new() { Name = "Ahmed", CountryId = CountryForReturnDTO_from_add.Id, DateOfBirth = Convert.ToDateTime("2010-01-01"), Email = "ahmed@email.com", Gender = GenderOptions.Male, ReceiveEmails = true };
 
-            PersonForReturnDTO PersonForReturnDTO_from_add = _personsService.AddPerson(personForCreateDTO);
+            PersonForReturnDTO PersonForReturnDTO_from_add =await _personsService.AddPerson(personForCreateDTO);
 
             //Act
-            bool isDeleted = _personsService.DeletePerson(PersonForReturnDTO_from_add.Id);
+            bool isDeleted =await _personsService.DeletePerson(PersonForReturnDTO_from_add.Id);
 
             //Assert
             Assert.True(isDeleted);
